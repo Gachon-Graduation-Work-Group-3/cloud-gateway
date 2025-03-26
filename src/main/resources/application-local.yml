@@ -1,0 +1,51 @@
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: whenyourcar-gateway-local
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/whenyourcar
+    username: root
+    password: 0782
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  cloud:
+    gateway:
+      routes:
+        - id: chat-server-swagger-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/swagger-ui/**
+          filters:
+            - StripPrefix=1
+
+        - id: api-server-route
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/user/**, /api/car/**, /api/chat/**, /ws/**
+
+        - id: xgboost-ml-server-route
+          uri: http://158.180.84.227:8000
+          predicates:
+            - Path=/price/prediction/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+server:
+  port: 8081
+
+jwt:
+  access:
+    expire: 1800000
+    secret: dskafndnvkclxzvlkcjxvoqewir329014178923hrjedsbjfajdsnv1238491234jh123
+  refresh:
+    prefix: 'refreshToken:'
+    expire: 604800000
+    secret: asdfasdfweqriuweru19237489321749791283vbznxcvbwhenyourcasdfasdfasdfqewr
+

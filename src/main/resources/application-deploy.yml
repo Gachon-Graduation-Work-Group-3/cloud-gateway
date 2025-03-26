@@ -1,0 +1,73 @@
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: whenyourcar-gateway-local
+
+  datasource:
+    url: jdbc:mysql://10.0.1.110:3306/whenyourcar
+    username: user
+    password: '@Opyuhepl758'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 89666550859-tatdsspvgvt7v1meaiqqpslvv3g09r1e.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+
+  data:
+    redis:
+      host: 10.0.1.23
+      port: 6379
+
+  cloud:
+    gateway:
+      routes:
+        - id: api-server-swagger-route
+          uri: http://158.180.84.227:8080
+          predicates:
+            - Path=/api/swagger-ui/**
+          filters:
+            - StripPrefix=1
+
+        - id: api-server-route
+          uri: http://158.180.84.227:8080
+          predicates:
+            - Path=/api/user/**, /api/car/**, /api/chat/**, /ws/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+        - id: xgboost-ml-server-route
+          uri: http://158.180.84.227:8000
+          predicates:
+            - Path=/price/prediction/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
+server:
+  port: 443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: 0782
+    key-store-type: PKCS12
+logging:
+  level:
+    org.springframework.security: debug
+
+jwt:
+  access:
+    expire: 1800000
+    secret: dskafndnvkclxzvlkcjxvoqewir329014178923hrjedsbjfajdsnv1238491234jh123
+  refresh:
+    prefix: 'refreshToken:'
+    expire: 604800000
+    secret: asdfasdfweqriuweru19237489321749791283vbznxcvbwhenyourcasdfasdfasdfqewr
+

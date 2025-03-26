@@ -45,7 +45,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // 허용할 도메인 설정
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001")); // 허용할 도메인 설정
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("*"));
 
